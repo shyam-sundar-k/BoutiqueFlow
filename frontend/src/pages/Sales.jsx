@@ -5,6 +5,7 @@ import api from "../services/api";
 function Sales() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
+  const [barcode, setBarcode] = useState("");
   const [cart, setCart] = useState([]);
   const [discount, setDiscount] = useState(0);
   const navigate = useNavigate();
@@ -23,6 +24,27 @@ function Sales() {
         console.error(error);
       });
   };
+
+  const scanBarcode = (code) => {
+  const product = products.find(
+    (p) => p.barcode === code.trim()
+  );
+
+  if (!product) {
+    alert("Product not found.");
+    setBarcode("");
+    return;
+  }
+
+  if (product.stock_quantity <= 0) {
+    alert("Out of stock.");
+    setBarcode("");
+    return;
+  }
+
+  addToCart(product);
+  setBarcode("");
+};
 
   // Add product to cart
   const addToCart = (product) => {
@@ -135,14 +157,33 @@ navigate(`/invoice/${saleId}`);
       <h1 className="sales-title">Sales & Billing</h1>
 
       <div className="search-section">
-        <input
-          type="text"
-          placeholder="Search products..."
-          className="search-input"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
+
+  <input
+    type="text"
+    placeholder="Scan Barcode..."
+    className="search-input"
+    value={barcode}
+    onChange={(e) => setBarcode(e.target.value)}
+    onKeyDown={(e) => {
+      if (e.key === "Enter") {
+        scanBarcode(barcode);
+      }
+    }}
+    autoFocus
+  />
+
+  <br />
+  <br />
+
+  <input
+    type="text"
+    placeholder="Search products..."
+    className="search-input"
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+  />
+
+</div>
 
       <div className="sales-layout">
 

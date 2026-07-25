@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../services/api";
+import "../styles/Invoice.css";
 
 function Invoice() {
   const { saleId } = useParams();
@@ -9,6 +10,7 @@ function Invoice() {
 
   useEffect(() => {
     fetchInvoice();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchInvoice = async () => {
@@ -22,35 +24,46 @@ function Invoice() {
   };
 
   if (!invoice) {
-    return <h2>Loading invoice...</h2>;
+    return (
+      <div className="invoice-page">
+        <h2>Loading Invoice...</h2>
+      </div>
+    );
   }
 
-  const discount = Number(invoice.subtotal) - Number(invoice.total_amount);
+  const discount =
+    Number(invoice.subtotal) - Number(invoice.total_amount);
 
   return (
-    <div className="invoice-container">
+    <div className="invoice-page">
+      <div className="invoice-card">
+        <div className="invoice-header">
+          <div>
+            <h1>Sri Annur Readymades</h1>
+            <p>Salem, Tamil Nadu</p>
+            <p>
+              <strong>GSTIN:</strong> XXXXXXXXXXXXXX
+            </p>
+          </div>
 
-      <div className="invoice">
+          <div className="invoice-info">
+            <h2>TAX INVOICE</h2>
 
-        <h1>Sri Annur Readymades</h1>
+            <p>
+              <strong>Invoice No:</strong>
+              <br />
+              {invoice.invoice_number}
+            </p>
 
-        <p>Salem, Tamil Nadu</p>
-
-        <hr />
-
-        <h2>Invoice</h2>
-
-        <p>
-          <strong>Invoice No:</strong> {invoice.invoice_number}
-        </p>
-
-        <p>
-          <strong>Date:</strong>{" "}
-          {new Date(invoice.sale_date).toLocaleString()}
-        </p>
+            <p>
+              <strong>Date:</strong>
+              <br />
+              {new Date(invoice.sale_date).toLocaleString()}
+            </p>
+          </div>
+        </div>
 
         <table className="invoice-table">
-
           <thead>
             <tr>
               <th>Product</th>
@@ -61,11 +74,8 @@ function Invoice() {
           </thead>
 
           <tbody>
-
             {invoice.items.map((item) => (
-
               <tr key={item.product_id}>
-
                 <td>{item.product_name}</td>
 
                 <td>{item.quantity}</td>
@@ -73,35 +83,52 @@ function Invoice() {
                 <td>₹{Number(item.unit_price).toFixed(2)}</td>
 
                 <td>₹{Number(item.line_total).toFixed(2)}</td>
-
               </tr>
-
             ))}
-
           </tbody>
-
         </table>
 
-        <hr />
+        <div className="invoice-total">
+          <table>
+            <tbody>
+              <tr>
+                <td>Subtotal</td>
+                <td>₹{Number(invoice.subtotal).toFixed(2)}</td>
+              </tr>
 
-        <h3>
-          Subtotal : ₹{Number(invoice.subtotal).toFixed(2)}
-        </h3>
+              <tr>
+                <td>Discount</td>
+                <td>₹{discount.toFixed(2)}</td>
+              </tr>
 
-        <h3>
-          Discount : ₹{discount.toFixed(2)}
-        </h3>
+              <tr>
+                <td>GST</td>
+                <td>₹0.00</td>
+              </tr>
 
-        <h2>
-          Grand Total : ₹{Number(invoice.total_amount).toFixed(2)}
-        </h2>
+              <tr className="grand-total">
+                <td>Grand Total</td>
+                <td>₹{Number(invoice.total_amount).toFixed(2)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-        <button onClick={() => window.print()}>
-          Print Invoice
-        </button>
+        <div className="invoice-footer">
+          <p>Thank you for shopping with us.</p>
+          <p>Goods once sold cannot be exchanged.</p>
+          <h3>Visit Again!</h3>
+        </div>
 
+        <div className="print-area">
+          <button
+            className="print-btn"
+            onClick={() => window.print()}
+          >
+            Print Invoice
+          </button>
+        </div>
       </div>
-
     </div>
   );
 }

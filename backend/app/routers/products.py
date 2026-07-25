@@ -11,9 +11,50 @@ from app.schemas.product import (
 
 router = APIRouter(prefix="/products", tags=["Products"])
 
+def generate_barcode(db):
+    last_product = (
+        db.query(Product)
+        .order_by(Product.id.desc())
+        .first()
+    )
+
+    if last_product and last_product.barcode:
+        try:
+            last_number = int(last_product.barcode.replace("SAR", ""))
+        except ValueError:
+            last_number = 0
+    else:
+        last_number = 0
+
+    return f"SAR{last_number + 1:06d}"
+
 
 @router.post("")
 def create_product(product: ProductCreate):
+    db = SessionLocal()
+
+    barcode = generate_barcode(db)
+
+    new_product = Product(
+        product_name=product.product_name,
+        category=product.category,
+        size=product.size,
+        barcode=barcode,
+        purchase_price=product.purchase_price,
+        selling_price=product.selling_price,
+        stock_quantity=product.stock_quantity,
+    )
+
+    db.add(new_product)
+    db.commit()
+    db.refresh(new_product)
+    db.close()
+
+    return {
+        "message": "Product added successfully!",
+        "product_id": new_product.id,
+        "barcode": new_product.barcode,
+    }
     db = SessionLocal()
 
     new_product = Product(

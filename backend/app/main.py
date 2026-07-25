@@ -12,6 +12,7 @@ from app.models.settings import Settings   # NEW
 from app.routers.products import router as product_router
 from app.routers.dashboard import router as dashboard_router
 from app.routers.sales import router as sales_router
+from app.routers.barcode import router as barcode_router
 from app.routers import reports
 from app.routers import settings          # NEW
 
@@ -52,3 +53,4 @@ app.include_router(product_router)
 app.include_router(sales_router)
 app.include_router(reports.router)
 app.include_router(settings.router)       # NEW
+app.include_router(barcode_router)

@@ -4,7 +4,7 @@ function Navbar() {
   return (
     <nav className="navbar">
       <div className="logo">
-        <h2>BoutiqueFlow</h2>
+        <h2>Sri Annur Readymades</h2>
       </div>
 
       <div className="nav-links">
@@ -33,6 +33,15 @@ function Navbar() {
           }
         >
           Add Product
+        </NavLink>
+
+        <NavLink
+          to="/barcode-labels"
+          className={({ isActive }) =>
+            isActive ? "nav-link active" : "nav-link"
+          }
+        >
+          Barcode Labels
         </NavLink>
 
         <NavLink

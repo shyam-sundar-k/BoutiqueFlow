@@ -1,6 +1,8 @@
 from decimal import Decimal
 
-from fastapi import APIRouter, Depends, HTTPException
+from datetime import date
+
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -91,11 +93,26 @@ def create_sale(
 
 @router.get("/")
 def get_all_sales(
+    from_date: date | None = Query(None),
+    to_date: date | None = Query(None),
     db: Session = Depends(get_db),
 ):
+    query = db.query(Sale)
+
+    if from_date:
+        query = query.filter(
+            Sale.sale_date >= from_date
+        )
+
+    if to_date:
+        query = query.filter(
+            Sale.sale_date < (
+                to_date.replace(day=to_date.day)  # keep date type
+            )
+        )
+
     sales = (
-        db.query(Sale)
-        .order_by(Sale.sale_date.desc())
+        query.order_by(Sale.sale_date.desc())
         .all()
     )
 
@@ -119,7 +136,6 @@ def get_all_sales(
         )
 
     return result
-
 
 @router.get("/{sale_id}")
 def get_sale(

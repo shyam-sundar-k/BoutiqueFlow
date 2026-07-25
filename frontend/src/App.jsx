@@ -11,6 +11,7 @@ import SalesHistory from "./pages/SalesHistory";
 import Invoice from "./pages/Invoice";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
+import BarcodeLabels from "./pages/BarcodeLabels";
 
 function App() {
   return (
@@ -34,6 +35,9 @@ function App() {
 
           {/* Settings */}
           <Route path="/settings" element={<Settings />} />
+          
+          {/* Barcode Labels */}
+          <Route path="/barcode-labels" element={<BarcodeLabels />} />
 
           {/* Invoice */}
           <Route path="/invoice/:saleId" element={<Invoice />} />
