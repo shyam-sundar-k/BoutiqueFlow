@@ -12,6 +12,7 @@ import Invoice from "./pages/Invoice";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import BarcodeLabels from "./pages/BarcodeLabels";
+import "./styles/theme.css";
 
 function App() {
   return (
