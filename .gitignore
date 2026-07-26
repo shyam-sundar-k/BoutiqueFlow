@@ -1,0 +1,16 @@
+# Backend
+backend/venv/
+backend/__pycache__/
+backend/*.pyc
+backend/build/
+backend/dist/
+
+# Node / Electron
+**/node_modules/
+desktop/release/
+
+# IDE
+.vscode/
+
+# Logs
+*.log
